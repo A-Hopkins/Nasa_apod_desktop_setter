@@ -18,6 +18,11 @@ NASA_APOD_SITE = "http://apod.nasa.gov/apod/"
 
 
 def download_image(site_url):
+    """
+
+    :param site_url:
+    :return:
+    """
     html = request.urlopen(site_url)
     soup = BeautifulSoup(html.read(), "lxml")
 
@@ -29,6 +34,7 @@ def download_image(site_url):
     image_file.write(html_image.read())
     image_file.close()
 
+    return image_file
 
 if __name__ == '__main__':
 
@@ -36,4 +42,8 @@ if __name__ == '__main__':
         os.makedirs(os.path.expanduser(DOWNLOAD_PATH))
 
     # Run script
-    download_image(NASA_APOD_SITE)
+    image_location = download_image(NASA_APOD_SITE)
+    print(image_location.name)
+
+    os.system("gsettings set org.gnome.desktop.background picture-uri " +
+              "'file:///%s'" % image_location.name)
